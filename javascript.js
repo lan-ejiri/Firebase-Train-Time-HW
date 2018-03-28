@@ -23,18 +23,16 @@ $(document).ready(function () {
 
     ];
 
-    console.log(initialTrainData);
+    //console.log(initialTrainData);
 
-    $("#submit-input").click(function () {
+    $("#submit-input").on("click",function() {
 
-
+        event.preventDefault();
         var trainNameInput = $("#train-name-input").val();
         var destInput = $("#dest-input").val().trim();
         var freqInput = parseInt($("#frequency-input").val().trim());
         var firstTrainInput = $("#first-train-input").val().trim();
-
-           console.log(trainNameInput);
-        
+        console.log(trainNameInput);
         // var newTrain = {
         //     trainName: trainNameInput,
         //     destination: destInput,
@@ -50,7 +48,6 @@ $(document).ready(function () {
 
 
     }); //closing submit button on click function
-
 
 
 
