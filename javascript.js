@@ -14,41 +14,9 @@ $(document).ready(function () {
     //defining databse
     var database = firebase.database();
 
-    //stores all initial train data
-    var trainData = [
-        {
-            trainName: "Trenton Express",
-            destination: "Trenton",
-            freq: 25,
-            first: "07:00",
-        },
-        {
-            trainName: "Oregon Trail",
-            destination: "Salem, Oregon",
-            freq: 3600,
-            first: "13:00",
-        },
-        {
-            trainName: "Midnight Carriage",
-            destination: "Philadelphia",
-            freq: 15,
-            first: "17:00",
-        },
-        {
-            trainName: "Sing Sing Caravan",
-            destination: "Atlanta",
-            freq: 45,
-            first: "17:00",
-        }
 
-    ];
+    var trainData = [];
 
-    //shove everything into firebase
-    database.ref().push({
-        trainshit: trainData,
-    });
-
-    //upon clicking submit button, (grabs all input values, stores the data into object, pushes the object into array, and updates firebase)
     $("#submit-input").on("click", function () {
 
         //prevents page from refreshing every time
@@ -70,16 +38,16 @@ $(document).ready(function () {
 
         //push the new object into the existing array
         trainData.push(newTrain);
-        console.log(trainData);
+        console.log("new train data: " + trainData);
         //update the firebase database
         database.ref().update({
             trainshit: trainData,
         });
+
         $("#first-train-input").val('');
         $("#train-name-input").val('');
-        $("#destn-input").val('');
+        $("#dest-input").val('');
         $("#frequency-input").val('');
-
 
 
     }); //closing submit button on click function
@@ -89,10 +57,44 @@ $(document).ready(function () {
     database.ref().on("value", function (snapshot) {
 
         if (snapshot.child("trainshit").exists()) {
-            var trainshitvar = snapshot.val().trainshit;
-            displayTable(trainshitvar);
-        }
 
+            displayTable(snapshot.val().trainshit);
+            trainData = snapshot.val().trainshit;
+        }
+        else {
+            trainData = [
+                {
+                    trainName: "Trenton Express",
+                    destination: "Trenton",
+                    freq: 25,
+                    first: "07:00",
+                },
+                {
+                    trainName: "Oregon Trail",
+                    destination: "Salem, Oregon",
+                    freq: 3600,
+                    first: "13:00",
+                },
+                {
+                    trainName: "Midnight Carriage",
+                    destination: "Philadelphia",
+                    freq: 15,
+                    first: "17:00",
+                },
+                {
+                    trainName: "Sing Sing Caravan",
+                    destination: "Atlanta",
+                    freq: 45,
+                    first: "17:00",
+                }
+
+            ];
+            database.ref().update({
+                trainshit: trainData,
+            });
+            displayTable(snapshot.val().trainshit);
+            trainData = snapshot.val().trainshit;
+        }
         // If any errors are experienced, log them to console. 
     }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
